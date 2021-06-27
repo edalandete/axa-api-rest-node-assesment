@@ -13,7 +13,7 @@ function authController() {
   }
 
   return {
-    login,
+    login
   };
 }
 
