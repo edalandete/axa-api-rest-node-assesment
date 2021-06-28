@@ -7,6 +7,8 @@ function policiesRouter() {
 
   routes.route('/')
     .get(policiesController.getAll);
+  routes.route('/:id')
+    .get(policiesController.getById);
 
   return routes;
 }
