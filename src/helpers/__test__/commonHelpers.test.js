@@ -1,26 +1,13 @@
 const axios = require('axios');
 
 const {
-  login
-} = require('../authController')();
+  getToken
+} = require('../commonHelpers');
 
 jest.mock('axios');
 
 describe('Given authController', () => {
   describe('When it is called with login function', () => {
-    const req = {
-      body: {
-        client_id: 'id',
-        client_secret: 'secret'
-      },
-      json: jest.fn(),
-      send: jest.fn()
-    };
-    const res = {
-      json: jest.fn(),
-      send: jest.fn(),
-      status: jest.fn()
-    };
     describe('And the promise is resolved', () => {
       test('Then the token should be returned', async () => {
         const token = {
@@ -29,18 +16,18 @@ describe('Given authController', () => {
             type: 'Bearer'
           }
         };
-        axios.get.mockResolvedValueOnce(token);
-        await login(req, res);
+        axios.post.mockResolvedValueOnce(token);
+        const result = await getToken();
 
-        expect(res.json).toHaveBeenCalledWith({ token: 'batman', type: 'Bearer' });
+        expect(result).toEqual({ token: 'batman', type: 'Bearer' });
       });
     });
 
     describe('And the promise is rejected', () => {
       test('Then the status code 401 should be sent', async () => {
         axios.mockRejectedValueOnce();
-        await login(req, res);
-        expect(res.status).toHaveBeenCalledWith(401);
+        const result = await getToken();
+        expect(result).toEqual({ status: 401, message: 'Invalid client or secret id' });
       });
     });
   });

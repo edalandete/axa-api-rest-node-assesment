@@ -23,12 +23,16 @@ const getToken = async () => {
   const client_id = process.env.CLIENT_ID;
   const client_secret = process.env.SECRET_CLIENT_ID;
 
-  const { data } = await axios.post(process.env.LOGIN_API, { client_id, client_secret });
+  try {
+    const { data } = await axios.post(process.env.LOGIN_API, { client_id, client_secret });
 
-  localStorage.setItem('token', data.token);
-  localStorage.setItem('type', data.type);
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('type', data.type);
 
-  return data;
+    return data;
+  } catch (error) {
+    return { status: 401, message: 'Invalid client or secret id' };
+  }
 };
 
 cron.schedule('*/5 * * * *', () => {
