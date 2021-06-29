@@ -1,3 +1,6 @@
+const axios = require('axios');
+const { localStorage } = require('../providers/cache-provider');
+
 const paginate = (model, _page, _limit) => {
   const page = parseInt(_page, 10) || 1;
   const limit = parseInt(_limit, 10) || 10;
@@ -14,6 +17,19 @@ const paginate = (model, _page, _limit) => {
   return result;
 };
 
+const getToken = async () => {
+  const client_id = process.env.CLIENT_ID;
+  const client_secret = process.env.SECRET_CLIENT_ID;
+
+  const { data } = await axios.post(process.env.LOGIN_API, { client_id, client_secret });
+
+  localStorage.setItem('token', data.token);
+  localStorage.setItem('type', data.type);
+
+  return data;
+};
+
 module.exports = {
-  paginate
+  paginate,
+  getToken
 };
