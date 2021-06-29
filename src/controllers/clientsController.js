@@ -1,17 +1,14 @@
 const axios = require('axios');
 const { localStorage } = require('../providers/cache-provider');
-const { paginate } = require('../helpers/commonHelpers');
 
-function policiesController() {
+function clientsController() {
   async function getAll(req, res) {
     const token = localStorage.getItem('token');
     const type = localStorage.getItem('type');
     const requestHeaders = { headers: { Authorization: `${type} ${token}` } };
     try {
       const { data } = await axios.get(process.env.POLICIES_API, requestHeaders);
-      const policies = paginate(data, req.query.page, req.query.limit);
-
-      res.json(policies);
+      res.json(data);
     } catch (error) {
       res.status(401);
       res.send('Unauthorized');
@@ -23,9 +20,14 @@ function policiesController() {
     const type = localStorage.getItem('type');
     const requestHeaders = { headers: { Authorization: `${type} ${token}` } };
     try {
-      const { data } = await axios.get(process.env.POLICIES_API, requestHeaders);
-      const policy = data.find((pol) => pol.id === id);
-      res.json(policy);
+      const { data } = await axios.get(process.env.CLIENTS_API, requestHeaders);
+      const client = data.find((pol) => pol.id === id);
+      if (client) {
+        res.json(client);
+      } else {
+        res.status(404);
+        res.send('Client not found');
+      }
     } catch (error) {
       res.status(401);
       res.send('Unauthorized');
@@ -38,4 +40,4 @@ function policiesController() {
   };
 }
 
-module.exports = policiesController;
+module.exports = clientsController;
