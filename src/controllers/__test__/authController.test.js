@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 const {
-  login,
+  login
 } = require('../authController')();
 
 jest.mock('axios');
@@ -11,23 +11,23 @@ describe('Given authController', () => {
     const req = {
       body: {
         client_id: 'id',
-        client_secret: 'secret',
+        client_secret: 'secret'
       },
       json: jest.fn(),
-      send: jest.fn(),
+      send: jest.fn()
     };
     const res = {
       json: jest.fn(),
       send: jest.fn(),
-      status: jest.fn(),
+      status: jest.fn()
     };
     describe('And the promise is resolved', () => {
       test('Then the token', async () => {
         const token = {
           data: {
             token: 'batman',
-            type: 'Bearer',
-          },
+            type: 'Bearer'
+          }
         };
         axios.post.mockResolvedValueOnce(token);
         await login(req, res);
