@@ -8,6 +8,10 @@ jest.mock('axios');
 
 describe('Given clientsController', () => {
   describe('When it is called with getAll function', () => {
+    const req = {
+      query: { limit: 10 }
+    };
+
     const res = {
       json: jest.fn(),
       send: jest.fn(),
@@ -25,21 +29,23 @@ describe('Given clientsController', () => {
             ]
         };
         axios.get.mockResolvedValueOnce(clients);
-        await getAll(null, res);
+        await getAll(req, res);
 
-        expect(res.json).toHaveBeenCalledWith([
-          {
-            id: '1',
-            name: 'Bruce Wayne'
-          }
-        ]);
+        expect(res.json).toHaveBeenCalledWith({
+          results: [
+            {
+              id: '1',
+              name: 'Bruce Wayne'
+            }
+          ]
+        });
       });
     });
 
     describe('And the promise is rejected', () => {
       test('Then the status code 401 should be sent', async () => {
         axios.mockRejectedValueOnce();
-        await getAll(null, res);
+        await getAll(req, res);
         expect(res.status).toHaveBeenCalledWith(401);
       });
     });
@@ -61,23 +67,23 @@ describe('Given clientsController', () => {
     };
 
     describe('And the promise is resolved', () => {
-      test('Then the token', async () => {
-        const policies = {
+      test('Then the client with the id 1 should be sent as response', async () => {
+        const clients = {
           data:
             [
               {
                 id: '1',
-                amountInsured: '1234'
+                name: 'Edgar'
               }
             ]
         };
-        axios.get.mockResolvedValueOnce(policies);
+        axios.get.mockResolvedValueOnce(clients);
         await getById(req, res);
 
         expect(res.json).toHaveBeenCalledWith(
           {
             id: '1',
-            amountInsured: '1234'
+            name: 'Edgar'
           }
         );
       });

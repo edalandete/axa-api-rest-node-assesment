@@ -17,7 +17,7 @@ describe('Given policiesController', () => {
       status: jest.fn()
     };
     describe('And the promise is resolved', () => {
-      test('Then the token', async () => {
+      test('Then all the policies should be sents', async () => {
         const policies = {
           data:
             [
@@ -69,7 +69,7 @@ describe('Given policiesController', () => {
     };
 
     describe('And the promise is resolved', () => {
-      test('Then the token', async () => {
+      test('Then the policy with the id 1 should be found', async () => {
         const policies = {
           data:
             [
