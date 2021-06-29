@@ -1,14 +1,18 @@
 const axios = require('axios');
 const { localStorage } = require('../providers/cache-provider');
+const { paginate } = require('../helpers/commonHelpers');
 
 function policiesController() {
   async function getAll(req, res) {
+    const { page, limit } = req.query;
     const token = localStorage.getItem('token');
     const type = localStorage.getItem('type');
     const requestHeaders = { headers: { Authorization: `${type} ${token}` } };
     try {
       const { data } = await axios.get(process.env.POLICIES_API, requestHeaders);
-      res.json(data);
+      const policies = paginate(data, page, limit);
+
+      res.json(policies);
     } catch (error) {
       res.status(401);
       res.send('Unauthorized');
