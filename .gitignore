@@ -359,3 +359,7 @@ auth-data.js
 
 /.expo
 .expo/
+
+#scratch
+/scratch
+scratch/
