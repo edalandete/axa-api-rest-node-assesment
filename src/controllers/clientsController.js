@@ -36,10 +36,30 @@ function clientsController() {
       res.send('Unauthorized');
     }
   }
+  async function getPoliciesFromClientId(req, res) {
+    const { id } = req.params;
+    const token = localStorage.getItem('token');
+    const type = localStorage.getItem('type');
+    const requestHeaders = { headers: { Authorization: `${type} ${token}` } };
+    try {
+      const { data } = await axios.get(process.env.POLICIES_API, requestHeaders);
+      const policies = data.filter((policy) => policy.clientId === id);
+      if (policies.length) {
+        res.json(policies);
+      } else {
+        res.status(404);
+        res.send('Client not found');
+      }
+    } catch (error) {
+      res.status(401);
+      res.send('Unauthorized');
+    }
+  }
 
   return {
     getAll,
-    getById
+    getById,
+    getPoliciesFromClientId
   };
 }
 

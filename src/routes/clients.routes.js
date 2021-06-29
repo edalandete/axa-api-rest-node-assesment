@@ -9,6 +9,8 @@ function clientsRouter() {
     .get(clientsController.getAll);
   routes.route('/:id')
     .get(clientsController.getById);
+  routes.route('/:id/policies')
+    .get(clientsController.getPoliciesFromClientId);
 
   return routes;
 }
