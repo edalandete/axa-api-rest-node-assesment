@@ -4,12 +4,13 @@ const { paginate } = require('../helpers/commonHelpers');
 
 function policiesController() {
   async function getAll(req, res) {
+    const { page, limit } = req.query;
     const token = localStorage.getItem('token');
     const type = localStorage.getItem('type');
     const requestHeaders = { headers: { Authorization: `${type} ${token}` } };
     try {
       const { data } = await axios.get(process.env.POLICIES_API, requestHeaders);
-      const policies = paginate(data, req.query.page, req.query.limit);
+      const policies = paginate(data, page, limit);
 
       res.json(policies);
     } catch (error) {
