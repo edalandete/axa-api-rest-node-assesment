@@ -1,4 +1,6 @@
 const axios = require('axios');
+const cron = require('node-cron');
+
 const { localStorage } = require('../providers/cache-provider');
 
 const paginate = (model, _page, _limit) => {
@@ -28,6 +30,10 @@ const getToken = async () => {
 
   return data;
 };
+
+cron.schedule('*/5 * * * *', () => {
+  getToken();
+});
 
 module.exports = {
   paginate,
