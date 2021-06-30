@@ -1,15 +1,25 @@
 const axios = require('axios');
+const { getToken } = require('../helpers/commonHelpers');
 const { localStorage } = require('../providers/cache-provider');
 
 function authController() {
   async function login(req, res) {
-    const { client_id, client_secret } = req.body;
+    const { email, password } = req.body;
     try {
-      const { data } = await axios.post(process.env.LOGIN_API, { client_id, client_secret });
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('type', data.type);
+      if (process.env.SECRET_PASSWORD === password) {
+        const token = await getToken();
+        const { data } = await axios.get(process.env.CLIENTS_API, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
+        const clientFound = data.find((client) => client.email === email);
 
-      res.json(data);
+        if (clientFound) {
+          localStorage.setItem('role', clientFound.role);
+          localStorage.setItem('clientId', clientFound.id);
+          res.json(token);
+        } else {
+          res.status(400);
+          res.send('Invalid username or password');
+        }
+      }
     } catch (error) {
       res.status(401);
       res.send('Invalid secret or client id');
