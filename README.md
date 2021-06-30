@@ -86,4 +86,52 @@
    403: Forbidden if a client with user role tries to get data from a policy that doesn't belong to him
    401: Unauthorized
    ```
-   
+### Clients
+1. GET /clients
+
+Request
+ ```
+  Query Params
+   - limit: 10 by default
+   - page
+   - name
+  Headers
+   - type, token
+   ```
+   Response
+   ```
+   200: OK
+   401: Unauthorized
+   ```
+2. GET /clients:id
+
+Request
+ ```
+  Params
+   - id
+  Headers
+   - type, token
+   ```
+   Response
+   ```
+   200: OK
+   401: Unauthorized
+   403: Forbidden
+   404: Not found
+   ```
+5. GET /clients:id/policies
+
+Request
+ ```
+  Params
+   - id
+  Headers
+   - type, token
+   ```
+   Response
+   ```
+   200: OK
+   401: Unauthorized
+   403: Forbidden
+   404: Not found
+   ```
