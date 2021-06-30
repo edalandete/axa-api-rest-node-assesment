@@ -41,10 +41,12 @@ cron.schedule('*/5 * * * *', () => {
 
 const isUser = (role) => role === process.env.USER_ROLE;
 const isAdmin = (role) => role === process.env.ADMIN_ROLE;
+const isUserPolicy = (policy, clientId) => policy.clientId === clientId;
 
 module.exports = {
   paginate,
   getToken,
   isUser,
-  isAdmin
+  isAdmin,
+  isUserPolicy
 };

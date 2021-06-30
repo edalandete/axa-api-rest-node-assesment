@@ -1,10 +1,17 @@
 const axios = require('axios');
+const { isAdmin, isUser, isUserPolicy } = require('../../helpers/commonHelpers');
 
 const {
   getAll, getById
 } = require('../policiesController')();
 
 jest.mock('axios');
+jest.mock('../../helpers/commonHelpers', () => ({
+  ...jest.requireActual('../../helpers/commonHelpers'),
+  isAdmin: jest.fn(),
+  isUser: jest.fn(),
+  isUserPolicy: jest.fn()
+}));
 
 describe('Given policiesController', () => {
   describe('When it is called with getAll function', () => {
@@ -16,8 +23,8 @@ describe('Given policiesController', () => {
       send: jest.fn(),
       status: jest.fn()
     };
-    describe('And the promise is resolved', () => {
-      test('Then all the policies should be sents', async () => {
+    describe('And the promise is resolved with admin role', () => {
+      test('Then all the policies should be returned', async () => {
         const policies = {
           data:
             [
@@ -28,6 +35,34 @@ describe('Given policiesController', () => {
             ]
         };
         axios.get.mockResolvedValueOnce(policies);
+        isAdmin.mockReturnValue(true);
+        await getAll(req, res);
+
+        expect(res.json).toHaveBeenCalledWith({
+          results: [
+            {
+              id: '1',
+              amountInsured: '1234'
+            }
+          ]
+        });
+      });
+    });
+
+    describe('And the promise is resolved with user role', () => {
+      test('Then all the policies matching the clientId should be returned', async () => {
+        const policies = {
+          data:
+            [
+              {
+                id: '1',
+                amountInsured: '1234',
+                clientId: '1'
+              }
+            ]
+        };
+        axios.get.mockResolvedValueOnce(policies);
+        isUser.mockReturnValue(true);
         await getAll(req, res);
 
         expect(res.json).toHaveBeenCalledWith({
@@ -68,26 +103,80 @@ describe('Given policiesController', () => {
       status: jest.fn()
     };
 
-    describe('And the promise is resolved', () => {
+    describe('And the promise is resolved with role admin', () => {
       test('Then the policy with the id 1 should be found', async () => {
         const policies = {
           data:
             [
               {
                 id: '1',
-                amountInsured: '1234'
+                amountInsured: '1234',
+                clientId: '1'
               }
             ]
         };
         axios.get.mockResolvedValueOnce(policies);
+        isAdmin.mockReturnValue(true);
         await getById(req, res);
 
         expect(res.json).toHaveBeenCalledWith(
           {
             id: '1',
-            amountInsured: '1234'
+            amountInsured: '1234',
+            clientId: '1'
           }
         );
+      });
+    });
+
+    describe('And the promise is resolved with role user', () => {
+      describe('And the policy belongs to the user', () => {
+        test('Then the policy with the id 1 should be found', async () => {
+          const policies = {
+            data:
+              [
+                {
+                  id: '1',
+                  amountInsured: '1234',
+                  clientId: '1'
+                }
+              ]
+          };
+          axios.get.mockResolvedValueOnce(policies);
+          isAdmin.mockReturnValue(false);
+          isUser.mockReturnValue(true);
+          isUserPolicy.mockReturnValue(true);
+          await getById(req, res);
+
+          expect(res.json).toHaveBeenCalledWith(
+            {
+              id: '1',
+              amountInsured: '1234',
+              clientId: '1'
+            }
+          );
+        });
+      });
+      describe('And the policy does not belong to the user', () => {
+        test('Then status 403 should be sent', async () => {
+          const policies = {
+            data:
+              [
+                {
+                  id: '1',
+                  amountInsured: '1234',
+                  clientId: '1'
+                }
+              ]
+          };
+          axios.get.mockResolvedValueOnce(policies);
+          isAdmin.mockReturnValue(false);
+          isUser.mockReturnValue(true);
+          isUserPolicy.mockReturnValue(false);
+          await getById(req, res);
+
+          expect(res.status).toHaveBeenCalledWith(403);
+        });
       });
     });
 

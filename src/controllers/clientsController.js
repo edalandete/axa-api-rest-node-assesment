@@ -27,9 +27,9 @@ function clientsController() {
     const requestHeaders = { headers: { Authorization: `${type} ${token}` } };
     try {
       const { data } = await axios.get(process.env.CLIENTS_API, requestHeaders);
-      const client = data.find((pol) => pol.id === id);
-      if (client) {
-        res.json(client);
+      const clientFound = data.find((client) => client.id === id);
+      if (clientFound) {
+        res.json(clientFound);
       } else {
         res.status(404);
         res.send('Client not found');
