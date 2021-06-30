@@ -3,11 +3,15 @@ const { paginate } = require('../helpers/commonHelpers');
 const { localStorage } = require('../providers/cache-provider');
 
 function clientsController() {
+  const token = localStorage.getItem('token');
+  const type = localStorage.getItem('type');
+  const role = localStorage.getItem('role');
+  const clientId = localStorage.getItem('clientId');
+
   async function getAll(req, res) {
     const { page, limit } = req.query;
-    const token = localStorage.getItem('token');
-    const type = localStorage.getItem('type');
     const requestHeaders = { headers: { Authorization: `${type} ${token}` } };
+
     try {
       const { data } = await axios.get(process.env.CLIENTS_API, requestHeaders);
       const clients = paginate(data, page, limit);
@@ -19,8 +23,7 @@ function clientsController() {
   }
   async function getById(req, res) {
     const { id } = req.params;
-    const token = localStorage.getItem('token');
-    const type = localStorage.getItem('type');
+
     const requestHeaders = { headers: { Authorization: `${type} ${token}` } };
     try {
       const { data } = await axios.get(process.env.CLIENTS_API, requestHeaders);
@@ -38,9 +41,8 @@ function clientsController() {
   }
   async function getPoliciesFromClientId(req, res) {
     const { id } = req.params;
-    const token = localStorage.getItem('token');
-    const type = localStorage.getItem('type');
     const requestHeaders = { headers: { Authorization: `${type} ${token}` } };
+
     try {
       const { data } = await axios.get(process.env.POLICIES_API, requestHeaders);
       const policies = data.filter((policy) => policy.clientId === id);
@@ -48,7 +50,7 @@ function clientsController() {
         res.json(policies);
       } else {
         res.status(404);
-        res.send('Client not found');
+        res.send(`No polices found matching the clientid ${id}`);
       }
     } catch (error) {
       res.status(401);

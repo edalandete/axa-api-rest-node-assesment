@@ -39,7 +39,12 @@ cron.schedule('*/5 * * * *', () => {
   getToken();
 });
 
+const isUser = (role) => role === process.env.USER_ROLE;
+const isAdmin = (role) => role === process.env.ADMIN_ROLE;
+
 module.exports = {
   paginate,
-  getToken
+  getToken,
+  isUser,
+  isAdmin
 };

@@ -13,6 +13,7 @@ function authController() {
 
         if (clientFound) {
           localStorage.setItem('role', clientFound.role);
+          localStorage.setItem('clientId', clientFound.id);
           res.json(data);
         } else {
           res.status(400);
