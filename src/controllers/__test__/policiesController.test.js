@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { isAdmin, isUser, isUserPolicy } = require('../../helpers/commonHelpers');
+const { isAdmin, isUser, isSameClient } = require('../../helpers/commonHelpers');
 
 const {
   getAll, getById
@@ -10,7 +10,7 @@ jest.mock('../../helpers/commonHelpers', () => ({
   ...jest.requireActual('../../helpers/commonHelpers'),
   isAdmin: jest.fn(),
   isUser: jest.fn(),
-  isUserPolicy: jest.fn()
+  isSameClient: jest.fn()
 }));
 
 describe('Given policiesController', () => {
@@ -145,7 +145,7 @@ describe('Given policiesController', () => {
           axios.get.mockResolvedValueOnce(policies);
           isAdmin.mockReturnValue(false);
           isUser.mockReturnValue(true);
-          isUserPolicy.mockReturnValue(true);
+          isSameClient.mockReturnValue(true);
           await getById(req, res);
 
           expect(res.json).toHaveBeenCalledWith(
@@ -172,7 +172,7 @@ describe('Given policiesController', () => {
           axios.get.mockResolvedValueOnce(policies);
           isAdmin.mockReturnValue(false);
           isUser.mockReturnValue(true);
-          isUserPolicy.mockReturnValue(false);
+          isSameClient.mockReturnValue(false);
           await getById(req, res);
 
           expect(res.status).toHaveBeenCalledWith(403);

@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { localStorage } = require('../providers/cache-provider');
 const {
-  paginate, isUser, isAdmin, isUserPolicy
+  paginate, isUser, isAdmin, isSameClient
 } = require('../helpers/commonHelpers');
 
 function policiesController() {
@@ -36,7 +36,7 @@ function policiesController() {
       const { data } = await axios.get(process.env.POLICIES_API, requestHeaders);
       const policy = data.find((pol) => pol.id === id);
 
-      if ((isUser(role) && isUserPolicy(policy, clientId)) || isAdmin(role)) {
+      if ((isUser(role) && isSameClient(clientId, policy.clientId)) || isAdmin(role)) {
         res.json(policy);
       } else {
         res.status(403);
