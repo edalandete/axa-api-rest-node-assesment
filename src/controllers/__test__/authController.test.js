@@ -1,17 +1,22 @@
 const axios = require('axios');
+const { getToken } = require('../../helpers/commonHelpers');
 
 const {
   login
 } = require('../authController')();
 
 jest.mock('axios');
+jest.mock('../../helpers/commonHelpers', () => ({
+  ...jest.requireActual('../../helpers/commonHelpers'),
+  getToken: jest.fn()
+
+}));
 
 describe('Given authController', () => {
   describe('When it is called with login function', () => {
     const req = {
       body: {
-        client_id: 'id',
-        client_secret: 'secret'
+        email: 'batman'
       },
       json: jest.fn(),
       send: jest.fn()
@@ -21,18 +26,38 @@ describe('Given authController', () => {
       send: jest.fn(),
       status: jest.fn()
     };
-    describe('And the promise is resolved', () => {
+    describe('And the promise is resolved with an existing client', () => {
       test('Then the token should be returned', async () => {
-        const token = {
-          data: {
-            token: 'batman',
-            type: 'Bearer'
-          }
+        const clients = {
+          data: [{
+            email: 'batman',
+            name: 'wane'
+          }]
         };
-        axios.get.mockResolvedValueOnce(token);
+        axios.get.mockResolvedValueOnce(clients);
+        getToken.mockReturnValueOnce({ token: 'batman', type: 'bearer' });
         await login(req, res);
 
-        expect(res.json).toHaveBeenCalledWith({ token: 'batman', type: 'Bearer' });
+        expect(res.json).toHaveBeenCalledWith({
+          token: 'batman',
+          type: 'bearer'
+        });
+      });
+    });
+
+    describe('And the promise is resolved with no existing client', () => {
+      test('Then the token should be returned', async () => {
+        const clients = {
+          data: [{
+            email: 'alfred',
+            name: 'wane'
+          }]
+        };
+        axios.get.mockResolvedValueOnce(clients);
+        getToken.mockReturnValueOnce({ token: 'batman', type: 'bearer' });
+        await login(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
       });
     });
 

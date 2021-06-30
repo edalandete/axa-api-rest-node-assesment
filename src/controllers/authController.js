@@ -7,14 +7,14 @@ function authController() {
     const { email, password } = req.body;
     try {
       if (process.env.SECRET_PASSWORD === password) {
-        const data = await getToken();
-        const clientsData = await axios.get(process.env.CLIENTS_API, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
-        const clientFound = clientsData.data.find((client) => client.email === email);
+        const token = await getToken();
+        const { data } = await axios.get(process.env.CLIENTS_API, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
+        const clientFound = data.find((client) => client.email === email);
 
         if (clientFound) {
           localStorage.setItem('role', clientFound.role);
           localStorage.setItem('clientId', clientFound.id);
-          res.json(data);
+          res.json(token);
         } else {
           res.status(400);
           res.send('Invalid username or password');

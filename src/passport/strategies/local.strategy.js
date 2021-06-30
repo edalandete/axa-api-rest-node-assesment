@@ -11,17 +11,6 @@ passport.use(
     async (email, password, done) => {
       try {
         const user = { email, password };
-
-        // if (!user) {
-        //   return done(null, false, { message: 'User not found' });
-        // }
-
-        // const validate = await user.verifyPassword(password);
-
-        // if (!validate) {
-        //   return done(null, false, { message: 'Wrong Password' });
-        // }
-
         return done(null, user, { message: 'Logged in Successfully' });
       } catch (error) {
         return done(error);
