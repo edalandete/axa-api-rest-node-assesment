@@ -1,7 +1,7 @@
 const axios = require('axios');
 const cron = require('node-cron');
 
-const { localStorage } = require('../providers/cache-provider');
+// const { localStorage } = require('../providers/cache-provider');
 
 const paginate = (model, _page, _limit) => {
   const page = parseInt(_page, 10) || 1;
@@ -25,10 +25,6 @@ const getToken = async () => {
 
   try {
     const { data } = await axios.post(process.env.LOGIN_API, { client_id, client_secret });
-
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('type', data.type);
-
     return data;
   } catch (error) {
     return { status: 401, message: 'Invalid client or secret id' };
