@@ -1,29 +1,34 @@
-const axios = require('axios');
-const { getToken } = require('../helpers/commonHelpers');
+const passport = require('passport');
 const { localStorage } = require('../providers/cache-provider');
 
 function authController() {
-  async function login(req, res) {
-    const { email, password } = req.body;
-    try {
-      if (process.env.SECRET_PASSWORD === password) {
-        const token = await getToken();
-        const { data } = await axios.get(process.env.CLIENTS_API, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
-        const clientFound = data.find((client) => client.email === email);
+  async function login(req, res, next) {
+    passport.authenticate(
+      'login',
+      async (err, token) => {
+        try {
+          if (err || !token) {
+            const error = new Error('An error occurred.');
 
-        if (clientFound) {
-          localStorage.setItem('role', clientFound.role);
-          localStorage.setItem('clientId', clientFound.id);
-          res.json(token);
-        } else {
-          res.status(400);
-          res.send('Invalid username or password');
+            return next(error);
+          }
+
+          req.login(
+            token,
+            { session: false },
+            async (error) => {
+              if (error) return next(error);
+
+              localStorage.setItem('token', token.token);
+              localStorage.setItem('type', token.type);
+              return res.json(token);
+            }
+          );
+        } catch (error) {
+          return next(error);
         }
       }
-    } catch (error) {
-      res.status(401);
-      res.send('Invalid secret or client id');
-    }
+    )(req, res, next);
   }
 
   return {

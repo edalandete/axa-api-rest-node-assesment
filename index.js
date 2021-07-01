@@ -7,6 +7,8 @@ const authRoutes = require('./src/routes/auth.routes');
 const policiesRoutes = require('./src/routes/policies.routes');
 const clientsRoutes = require('./src/routes/clients.routes');
 
+require('./src/passport/strategies/local.strategy');
+
 const port = process.env.PORT || 1905;
 
 const app = express();
