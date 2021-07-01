@@ -36,7 +36,7 @@
 2. See the coverage file in folder ```lcov_report```
 
 ## Endpoints
-
+If you need more info, you can use the postman collection uploaded in the root of the project called ``` axa-assesment.postman_collection.json ```
 ### Authenticate user
 1. POST /login
 
