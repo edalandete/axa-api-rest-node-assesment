@@ -1,0 +1,150 @@
+{
+	"info": {
+		"_postman_id": "9d6b5405-cbbf-495a-8225-542d8eaaf045",
+		"name": "axa-assesment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "login",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"client_id\": \"dare\",\r\n    \"client_secret\": \"s3cr3t\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7021/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7021",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "polices",
+			"item": [
+				{
+					"name": "polices",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:7021/polices",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7021",
+							"path": [
+								"polices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "policyById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:7021/polices/64cceef9-3a01-49ae-a23b-3761b604800b",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7021",
+							"path": [
+								"polices",
+								"64cceef9-3a01-49ae-a23b-3761b604800b"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "clients",
+			"item": [
+				{
+					"name": "clientById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:7021/clients/e8fd159b-57c4-4d36-9bd7-a59ca13057bb",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7021",
+							"path": [
+								"clients",
+								"e8fd159b-57c4-4d36-9bd7-a59ca13057bb"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "clients",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:7021/polices/64cceef9-3a01-49ae-a23b-3761b604800b",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7021",
+							"path": [
+								"polices",
+								"64cceef9-3a01-49ae-a23b-3761b604800b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getPoliciesFromClient",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": null
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
