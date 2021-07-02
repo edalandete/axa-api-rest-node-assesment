@@ -135,3 +135,23 @@ Request
    403: Forbidden
    404: Not found
    ```
+   
+## Architecture
+
+### Project folders organization
+The project is organized in a folder structure so it can be easy to find all the files related to an endpoint and every file has his own purpose. Also If we want to use one endpoint for another middleware or api, disengage them is very fast and easy.
+
+### Testing
+JEST testing library: it's very fast and very intuitive to use. You don't need any extra libraries to mock modules, with jest is already included. Also allows you to see the status of your test with a simple --watch parameter.
+--collect-coverage: by doing so, you have an HTML interface that gives you a fast snapshot of your tests and also you can see what parts of your code it's not tested yet.
+
+### AXIOS
+AXIOS has many advantatges over Fetch integrated in JS. To sum up, has a wide browser support over conventional fetch and also has the data property that returns a JSON object and can intercept HTTP Requests.
+
+### PassportJS
+It's very flexible and it's documentation it's very intuitive. Gives you a complete set of authentications and you can configure them very fast. 
+
+### Other Dependencies
+ - Nodemon: every time you save, the server is restarted automatically so you can develop faster
+ - Morgan: it's very flexible and gives you information of each call you make to the API
+ - CRON: a simple way to schedule tasks and avoid token expiration
