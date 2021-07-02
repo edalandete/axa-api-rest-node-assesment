@@ -2,6 +2,19 @@ const passport = require('passport');
 const { localStorage } = require('../providers/cache-provider');
 
 function authController() {
+  /**
+   *
+   * Function that returns the token if the user is authenticated or error
+   * if the user doesn't exist
+   *
+   * @param {object} req Request API Call includes:
+   *  - login: function to authenticate to the app
+   * @param {object} res Response API Call
+   *  - Possible status:
+   *    - 200: OK
+   * @param {object} next Function Callback that will be called in case of error
+   *
+   */
   async function login(req, res, next) {
     passport.authenticate(
       'login',

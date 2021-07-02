@@ -10,6 +10,22 @@ function policiesController() {
   const role = localStorage.getItem('role');
   const clientId = localStorage.getItem('clientId');
 
+  /**
+   * This function gets all policies if the role is admin
+   * This function gets all client's policies if the role is user and the user id is the
+   * same as the logged user
+   *
+   * @param {object} req Request API Call includes:
+   *  - query {object}
+   *    - page:   {number} page to show
+   *    - limit:  {number} registers per page to show
+   *
+   * @param {object} res Response API Call
+   *  - Possible status:
+   *   - 200: OK
+   *   - 401: Unauthorized
+   */
+
   async function getAll(req, res) {
     const { page, limit } = req.query;
     const requestHeaders = { headers: { Authorization: `${type} ${token}` } };
@@ -28,6 +44,22 @@ function policiesController() {
       res.send('Unauthorized');
     }
   }
+
+  /**
+   *
+   * Function that returns the policy data matching the id from params
+   *
+   * @param {*} req Request API Call includes:
+   *  - params: {object}
+   *    - id: {number} policy id
+   * @param {*} res Response API Call
+   *   - Possible status:
+   *    - 200: OK
+   *    - 401: Unauthorized
+   *    - 403: Forbidden
+   *    - 404: Not found
+   */
+
   async function getById(req, res) {
     const { id } = req.params;
     const requestHeaders = { headers: { Authorization: `${type} ${token}` } };
